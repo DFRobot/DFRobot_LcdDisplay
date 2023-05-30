@@ -1,0 +1,181 @@
+
+/**!
+ * @file drawIcon.ino
+ * @brief Icon Display Example
+ * @details Displaying different icons based on different icon numbers.
+ * @n  Most parameters are related to the screen size (320*240). Please ensure that the custom parameters do not exceed the screen limits.
+ * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author [fengli](li.feng@dfrobot.com)
+ * @maintainer [qsjhyy](yihuan.huang@dfrobot.com)
+ * @version  V1.0
+ * @date  2023-05-29
+ * @url https://github.com/DFRobot/DFRobot_LcdDisplay
+ */
+#include "DFRobot_LcdDisplay.h"
+
+#define I2C_COMMUNICATION  // I2C communication. If you want to use UART communication, comment out this line of code.
+
+#ifdef  I2C_COMMUNICATION
+  /**
+    * Using the I2C interface.
+    */
+  DFRobot_Lcd_IIC lcd(&Wire, /*I2CAddr*/ 0x2c);
+#else
+  /**
+    * Using the UART interface.
+    */
+  #if ((defined ARDUINO_AVR_UNO) || (defined ESP8266) || (defined ARDUINO_BBC_MICROBIT_V2))
+    #include <SoftwareSerial.h>
+    SoftwareSerial softSerial(/*rx =*/4, /*tx =*/5);
+    #define FPSerial softSerial
+  #else
+    #define FPSerial Serial1
+  #endif
+  DFRobot_Lcd_UART lcd(FPSerial);
+#endif
+
+// Icons that are already burned into the firmware.
+#if 0   // This is a comment. To avoid compilation errors, it can only be 0.
+// sensor icons
+eIconAlcohol, eIconAntennaReceiver, eIconAntenna, eIconBattery, eIconBluetooth, eIconBulb, eIconCarbonDioxide,
+eIconColor, eIconCompass, eIconDistance, eIconDust, eIconHeartRate, eIconLiquid, eIconMicrophone, eIconMountain,
+eIconPressure, eIconRaindrops, eIconThermometer, eIconWeigh, eIconWifi, eIconWind, eIconLight, eIconUVLight,
+
+// expression icons
+eIconAngry, eIconBlink, eIconCry, eIconCute, eIconDepressed, eIconDizzy, eIconEmbarrassed, eIconFunny,
+eIconHappy, eIconKind, eIconLike, eIconPlayful, eIconResentful, eIconSad, eIconSerious, eIconShy, eIconSmile, eIconSurprised,
+eIconTear, eIconTired,
+
+// Environment and Nature icons
+eIconBiofuel, eIconCarElectric, eIconDesertLandscape, eIconDirections, eIconEarth, eIconEcoAccumulatorBattery,
+eIconGlassRecycle, eIconGlobalWarming, eIconGreenPower, eIconGreenEnergy, eIconGreenhouse, eIconIcebergMelting,
+eIconLandscape, eIconNoPlastic, eIconNoSewage, eIconProtectEarth, eIconRainLandscape, eIconRecyclingCar,
+eIconRelaxLandscape, eIconSolar, eIconTap, eIconTrash, eIconTreeLandscape, eIconWaterRecycle, eIconWinterForest,
+
+// season icons
+eIconBeachBed, eIconBeachUmbrella8, eIconChristmasStocking, eIconCoconut, eIconFan, eIconFireplace, eIconGlove,
+eIconHat, eIconIceCream, eIconLifeBuoy, eIconSanta, eIconShorts, eIconSlipper, eIconSnowman, eIconSunny,
+eIconSweater, eIconSwimming, eIconSwimwear, eIconThanksgiving, eIconThermometerSnow, eIconWatermelon,
+
+// Weather icons
+eIconCloudy,    eIconMoon,    eIconLightning,    eIconMoonCloudy,
+eIconRainUmbrella,    eIconRainbow1,    eIconRainbow2,    eIconRainy,
+eIconSnow,    eIconSnowy,    eIconSunnyCloudy,    eIconWhirlwind,
+
+// Sports icons
+eIconBadminton, eIconBasketball, eIconBowling, eIconChess, eIconCycling, eIconDarts, eIconDiving, eIconDumbbell,
+eIconGolf, eIconIceHockey, eIconKarate, eIconPingPong, eIconRunning, eIconSoccer, eIconTennis, eIconYoga,
+
+// animal icons
+eIconBee, eIconBird, eIconButterfly, eIconCaterpillar, eIconChick, eIconChicken, eIconChipmunk,
+eIconCoccinellaSeptempunctata, eIconCow, eIconDog, eIconDolphin, eIconDragon, eIconElephant, eIconHorse,
+eIconMonkey, eIconOwl, eIconPig, eIconRabbit, eIconRooster, eIconSheep, eIconSnail, eIconSnake, eIconTurtle,
+eIconUnicorn, eIconWasp, eIconWorm,
+
+// Plant icons
+eIconBranch, eIconCactus1, eIconCactus2, eIconCactus3, eIconDeciduousTree, eIconDecorativePottedPlants, eIconFlower,
+eIconGrass, eIconGrass1, eIconLeaf, eIconPalmTree, eIconPottedPlantFlower, eIconRose, eIconRose1, eIconSunflower,
+eIconSunflower1, eIconTulips,
+
+// food icons
+eIconAvocado, eIconBanana, eIconBeerMug, eIconBentoBox, eIconBirthdayCake, eIconBread, eIconCake, eIconCarrot,
+eIconCheeseWedge, eIconCherry, eIconChocolateBar, eIconCutOfMeat, eIconEarOfCorn,
+eIconEgg, eIconFrenchFries, eIconGrapes, eIconGreenSalad, eIconHamburger,
+eIconHotBeverage, eIconPeach, eIconPineapple, eIconPopcorn, eIconPotato,
+eIconRedApple, eIconSalad, eIconShaomai, eIconSandwich, eIconShortcake,
+eIconStrawberry,
+
+// safe icons
+eIconDial, eIconDisabledAccess, eIconDown, eIconExit, eIconExitLeft, eIconExportRight, eIconFireescapeStairs,
+eIconFireExtinguisher, eIconFire, eIconHydrant, eIconLeft, eIconLifeladder, eIconMedicalCare, eIconRight, eIconUp,
+
+// transport icons
+eIconAirplane, eIconAmbulance, eIconAutomobile, eIconBicycle, eIconBus, eIconBusStop, eIconDeliveryTruck,
+eIconFireEngine, eIconHelicopter, eIconHighSpeedRailway, eIconHorizontalTrafficLight, eIconKickScooter,
+eIconMotorScooter, eIconMotorway, eIconOncomingTaxi, eIconPoliceCar, eIconTractor, eIconVerticalTrafficLight,
+
+// Agriculture icons
+eIconBarn, eIconBarrier, eIconBoots, eIconCutWood, eIconEggs, eIconFertilizer, eIconFruits, eIconMilkContainer,
+eIconPlant, eIconSheafOfRice, eIconSprout, eIconStorageBucket, eIconTool, eIconTractor2, eIconVegetables,
+eIconWateringCan, eIconWellWater, eIconWheelbarrow,
+
+// people icons
+eIconDesigner, eIconDiver, eIconDoctor, eIconLabScientist, eIconMagicianMale, eIconNurse, eIconPhotographerMale,
+eIconPolice, eIconProgrammerMale, eIconSoldier, eIconSuccessGoalBusinessman, eIconSurgeon, eIconTeacher,
+
+// Numeric graphic icons
+eIconArrowDown,    eIconArrowLeft,    eIconArrowRight,    eIconArrowUp,
+eIconDiamond,    eIconEight,    eIconFive,    eIconFivePointedStar,    eIconHeart,
+eIconNine,    eIconFour,    eIconOctagon,    eIconOne,    eIconPentagon,
+eIconRectangle,    eIconSeven,    eIconSix,    eIconSquare,    eIconThree,
+eIconTriangle,    eIconTwo,    eIconWindmillShape,    eIconZero,
+
+// Music icons
+eIconAccordion, eIconBassDrum, eIconCDDiskDVD, eIconCello, eIconElectricGuitar, eIconFlute, eIconGuitar,
+eIconHarmonica, eIconHarp, eIconHeadphones, eIconMelodica, eIconMusic, eIconMusicStereo, eIconMusicTurntable,
+eIconMuteSoundOff, eIconPiano, eIconSaxophone, eIconSpeakerAudio, eIconTrumpet, eIconXylophone,
+
+#endif
+
+DFRobot_LcdDisplay::sControlinf_t* icon1;
+
+/**
+ * User-selectable macro definition color
+ * BLACK_RGB565 BLUE_RGB565 RED_RGB565 GREEN_RGB565 CYAN_RGB565 MAGENTA_RGB565
+ * YELLOW_RGB565 WHITE_RGB565 NAVY_RGB565 DARKGREEN_RGB565 DARKCYAN_RGB565 MAROON_RGB565
+ * PURPLE_RGB565 OLIVE_RGB565 LIGHTGREY_RGB565 DARKGREY_RGB565 ORANGE_RGB565
+ * GREENYELLOW_RGB565 DCYAN_RGB565
+ */
+void setup(void)
+{
+  #ifndef  I2C_COMMUNICATION
+    #if (defined ESP32)
+      FPSerial.begin(9600, SERIAL_8N1, /*rx =*/D2, /*tx =*/D3);
+    #else
+      FPSerial.begin(9600);
+    #endif
+  #endif
+
+  Serial.begin(115200);
+
+  lcd.begin();
+  //Initializing 
+  lcd.lvglInit(/*Displaying the background color*/WHITE_RGB565);
+  // Drawing icons
+  // The last parameter is the scaling factor, ranging from 128 to 512, where 128 represents a 50% reduction and 512 represents a 100% increase in size.
+  icon1 = lcd.drawIcon(/*x=*/0,/*y =*/0,/*Icon number*/DFRobot_LcdDisplay::eIconDial,/*Scaling factor*/128);
+  lcd.drawIcon(0, 60, DFRobot_LcdDisplay::eIconDisabledAccess, 128);
+  lcd.drawIcon(0, 120, DFRobot_LcdDisplay::eIconAngry, 128);
+  lcd.drawIcon(0, 180, DFRobot_LcdDisplay::eIconBlink, 128);
+
+  lcd.drawIcon(64, 0, DFRobot_LcdDisplay::eIconAlcohol, 128);
+  lcd.drawIcon(64, 60, DFRobot_LcdDisplay::eIconAntennaReceiver, 128);
+  lcd.drawIcon(64, 120, DFRobot_LcdDisplay::eIconBee, 128);
+  lcd.drawIcon(64, 180, DFRobot_LcdDisplay::eIconBird, 128);
+
+  lcd.drawIcon(128, 0, DFRobot_LcdDisplay::eIconBiofuel, 128);
+  lcd.drawIcon(128, 60, DFRobot_LcdDisplay::eIconCarElectric, 128);
+  lcd.drawIcon(128, 120, DFRobot_LcdDisplay::eIconBeachBed, 128);
+  lcd.drawIcon(128, 180, DFRobot_LcdDisplay::eIconBeachUmbrella8, 128);
+
+  lcd.drawIcon(192, 0, DFRobot_LcdDisplay::eIconAirplane, 128);
+  lcd.drawIcon(192, 60, DFRobot_LcdDisplay::eIconAmbulance, 128);
+  lcd.drawIcon(192, 120, DFRobot_LcdDisplay::eIconBarn, 128);
+  lcd.drawIcon(192, 180, DFRobot_LcdDisplay::eIconBarrier, 128);
+
+  lcd.drawIcon(256, 0, DFRobot_LcdDisplay::eIconDesigner, 128);
+  lcd.drawIcon(256, 60, DFRobot_LcdDisplay::eIconDiver, 128);
+  lcd.drawIcon(256, 120, DFRobot_LcdDisplay::eIconCloudy, 128);
+  lcd.drawIcon(256, 180, DFRobot_LcdDisplay::eIconAvocado, 128);
+}
+
+void loop(void)
+{
+  delay(5000);
+  lcd.lvglDelete(icon1);
+  icon1 = lcd.drawIcon(0, 0, DFRobot_LcdDisplay::eIconAccordion, 128);
+  delay(5000);
+  lcd.lvglDelete(icon1);
+  icon1 = lcd.drawIcon(0, 0, DFRobot_LcdDisplay::eIconBadminton, 128);
+}
