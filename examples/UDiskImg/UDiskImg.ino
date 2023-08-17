@@ -57,8 +57,8 @@ void setup(void)
   Serial.begin(115200);
 
   lcd.begin();
-  //Initializing 
-  lcd.lvglInit(/*Displaying the background color*/WHITE_RGB565);
+  // Resetting the screen.
+  lcd.reset();
   delay(3000);
   // Display USB flash drive pictures. You can display 16-bit or 24-bit (color depth) bmp pictures (maximum screen size 320*240) and small-size png pictures (below 70*70)
   // The last parameter is the zoom index range of (128~512),128- zoom out by one,512- zoom in by one

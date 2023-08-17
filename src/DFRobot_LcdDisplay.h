@@ -109,7 +109,6 @@
 
 #define CMD_OF_DRAWICON         20
 #define CMD_OF_DRAWSTRING       21
-#define CMD_OF_DRAWSTRING2      22
 #define CMD_OF_DRAWDISKIMG      23
 
 #define CMD_DRAW_LVGLSLIDER     31
@@ -853,17 +852,6 @@ public:
   void setMeterValue(sControlinf_t* obj, uint16_t value);
 
   /**
-   * @fn drawString(uint8_t x, uint8_t y, String str, uint8_t type, uint16_t color)
-   * @brief Display text on the screen
-   * @param x The x-coordinate of the starting position
-   * @param y The y-coordinate of the starting position
-   * @param str The text to display
-   * @param type Text size (only applicable to eChinese and eAscii): 0 (24px size), 1 (12px size)
-   * @param color Color of text
-   */
-  void drawString(uint16_t x, uint8_t y, String str, uint8_t type, uint16_t color);
-
-  /**
    * @fn drawString(uint8_t x, uint8_t y, String str, uint8_t type, uint16_t color, uint16_t bgColor)
    * @brief Display text on the screen
    * @param x The x-coordinate of the starting position
@@ -871,7 +859,7 @@ public:
    * @param str The text to display
    * @param type Text size (only applicable to eChinese and eAscii): 0 (24px size), 1 (12px size)
    * @param color Color of text
-   * @param bgColor The color of the text background
+   * @param bgColor The color of the text background (0: 表示不绘制背景颜色)
    */
   void drawString(uint16_t x, uint8_t y, String str, uint8_t type, uint16_t color, uint16_t bgColor);
 
@@ -917,40 +905,21 @@ public:
   void reset();
 
 private:
-  /**
-   * @fn creatStations
-   * @brief Create a weather station control
-   * @param x The x-axis coordinate of the control
-   * @param y The y-axis coordinate of the control
-   * @param zoo  Control size scaling index(128~512)
-   * @param color Control color
-   * @param str The text inside the weather station icon
-   * @return Weather station control of the object
-   */
-  sControlinf_t* creatStations(uint16_t x, uint16_t y, uint16_t zoo, uint16_t color, String str);
-
-  /**
-   * @fn setStationValue
-   * @brief Set the weather station control
-   * @param obj Weather station control of the object
-   * @param value Meteorological monitoring values, such as temperature
-   */
-  void setStationValue(sControlinf_t* obj, String value);
-
   TwoWire* _pWire;
   sControlinf_t head;
   eLcdFont_t _font = eAscii;
   uint8_t _deviceAddr;
+
   uint16_t getWordLen(uint8_t* utf8, uint8_t len);
-  uint8_t addChartPoint(sControlinf_t* obj, uint8_t id, uint16_t value);
   uint8_t utf8toUnicode(uint8_t* utf8, uint16_t& uni);
+  uint8_t addChartPoint(sControlinf_t* obj, uint8_t id, uint16_t value);
   uint8_t setChartTickTexts(sControlinf_t* obj, String xtext, String ytext);
   void drawStringHepler(uint16_t x, uint8_t y, uint8_t* uni, uint8_t lenght, uint8_t type, uint16_t color, uint16_t fgColor);
-  void drawStringHepler(uint16_t x, uint8_t y, uint8_t* uni, uint8_t lenght, uint8_t type, uint16_t color);
   uint8_t getNumber(uint8_t id);
+
   uint8_t* creatCommand(uint8_t cmd, uint8_t len);
-  virtual void    writeCommand(uint8_t* pBuf, uint16_t len) = 0;
-  virtual void    readACK(uint8_t* pBuf, uint16_t len) = 0;
+  virtual void writeCommand(uint8_t* pBuf, uint16_t len) = 0;
+  virtual void readACK(uint8_t* pBuf, uint16_t len) = 0;
 };
 
 

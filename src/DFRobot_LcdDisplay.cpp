@@ -64,6 +64,7 @@ void DFRobot_LcdDisplay::fillScreen(uint16_t color)
   cmd[5] = color & 0xFF;
 
   writeCommand(cmd, CMDLEN_OF_FILLSCREEN);
+  delay(1500);
   free(cmd);
 }
 
@@ -726,84 +727,6 @@ void DFRobot_LcdDisplay::drawStringHepler(uint16_t x, uint8_t y, uint8_t* uni, u
 
 }
 
-void DFRobot_LcdDisplay::drawStringHepler(uint16_t x, uint8_t y, uint8_t* uni, uint8_t lenght, uint8_t type, uint16_t color)
-{
-
-
-  uint8_t* cmd = creatCommand(CMD_OF_DRAWSTRING2, lenght + 11);
-  if (cmd == NULL) {
-    DBG("cmd null");
-  }
-  cmd[4] = x >> 8;
-  cmd[5] = x & 0xFF;
-  cmd[6] = y;
-
-  cmd[7] = type;
-  cmd[8] = color >> 8;
-  cmd[9] = color & 0xFF;
-  cmd[10] = _font;
-  for (uint8_t i = 0;i < lenght;i++) {
-    cmd[11 + i] = uni[i];
-  }
-  writeCommand(cmd, lenght + 11);
-  free(cmd);
-
-}
-
-void DFRobot_LcdDisplay::drawString(uint16_t x, uint8_t y, String str, uint8_t type, uint16_t color)
-{
-
-  uint8_t uni[36] = { 0 };
-
-  int16_t length = str.length();
-  uint8_t data[136] = { 0 };
-  uint8_t* dataPtr = data;
-  uint16_t unicode = 0;
-  uint8_t lenght = 0;
-  if (dataPtr == NULL) {
-    DBG("data null");
-  }
-  uint16_t x1 = x;
-  uint16_t y1 = y;
-
-  for (uint8_t i = 0; i < length; i++) {
-    data[i] = str[i];
-  }
-
-  while (length > 0) {
-    uint8_t len1 = utf8toUnicode(dataPtr, unicode);
-    length = length - len1;
-    uni[lenght] = unicode >> 8;
-    uni[lenght + 1] = unicode & 0xff;
-    lenght += 2;
-
-    dataPtr += len1;
-
-    if (lenght == 20) {
-      drawStringHepler(x1, y1, uni, lenght, type, color);
-      lenght = 0;
-      if ((type == 0) && (_font == eChinese)) {
-        x1 += 10 * (25);
-      } else if ((type == 1) && (_font == eChinese)) {
-        x1 += 10 * (13);
-      } else if ((type == 0) && (_font == eAscii)) {
-        x1 += 10 * (12);
-      } else if ((type == 1) && (_font == eAscii)) {
-        x1 += 10 * (6);
-      } else if (_font == eAlb) {
-        x1 += 10 * (16);
-      } else if (_font == eShiftJis || _font == eKorean || _font == eKhmer) {
-        x1 += 10 * (24);
-      } else {
-        x1 += 10 * (8);
-      }
-
-    }
-  }
-  if (lenght == 0) return;
-  drawStringHepler(x1, y1, uni, lenght, type, color);
-}
-
 void DFRobot_LcdDisplay::setFont(eLcdFont_t font)
 {
   _font = font;
@@ -867,73 +790,6 @@ uint16_t DFRobot_LcdDisplay::getWordLen(uint8_t* utf8, uint8_t len)
   return length;
 }
 
-DFRobot_LcdDisplay::sControlinf_t* DFRobot_LcdDisplay::creatStations(uint16_t x, uint16_t y, uint16_t zoo, uint16_t color, String str)
-{
-  sControlinf_t* station = (sControlinf_t*)malloc(sizeof(sControlinf_t));
-  if (station == NULL) {
-    DBG("BAR malloc fail !");
-  }
-  station->x = x;
-  station->y = y;
-  station->width = 100;
-  station->height = 100;
-  station->color = 0;
-  station->id = 1;
-  station->number = getNumber(1);
-  station->inf = NULL;
-  sControlinf_t* obj = &head;
-  while (obj->inf != NULL) {
-    obj = obj->inf;
-  }
-  obj->inf = station;
-
-  uint8_t* cmd = creatCommand(CMD_DRAW_LVGLSTATION, CMDLEN_DRAW_LVGLSTATION);
-  cmd[4] = station->number;
-  cmd[5] = 1;
-  cmd[6] = x >> 8;
-  cmd[7] = x & 0xFF;
-  cmd[8] = y >> 8;
-  cmd[9] = y & 0xFF;
-  cmd[10] = zoo >> 8;
-  cmd[11] = zoo & 0xFF;
-  cmd[12] = color >> 8;
-  cmd[13] = color & 0xFF;
-  writeCommand(cmd, CMDLEN_DRAW_LVGLSTATION);
-  free(cmd);
-  uint8_t lenght = str.length();
-  for (uint8_t i = 0;i < lenght;i++) {
-    wordLen[i] = str[i];
-  }
-  int16_t word = 0;
-  if ((_font == eChinese) || (_font == eAscii)) {
-    word = getWordLen(wordLen, lenght);
-  } else if ((_font == eShiftJis) || (_font == eKorean)) {
-    word = (lenght / 3) * 24;
-  }
-  int16_t zoo1 = (100 * zoo) / 256;
-  int16_t x1 = x + (zoo1 - word) / 2 - (zoo1 - 100) / 2;
-  int16_t y1 = y + (zoo1) / 2 + (10 * zoo) / 256 - (zoo1 - 100) / 2;
-  delay(300);
-  drawString(/*x=*/x1, y1, str,/*font size*/1,/*前景色*/color);
-  return station;
-}
-
-void DFRobot_LcdDisplay::setStationValue(sControlinf_t* obj, String value)
-{
-  uint8_t len = value.length();
-  uint8_t* cmd = creatCommand(CMD_DRAW_LVGLSTATION, len + 10);
-  cmd[4] = obj->number;
-  cmd[5] = 2;
-  cmd[6] = obj->id;
-
-  for (uint8_t i = 0;i < len;i++) {
-    cmd[7 + i] = value[i];
-  }
-  writeCommand(cmd, len + 7);
-  free(cmd);
-  //return 1;
-}
-
 void DFRobot_LcdDisplay::drawString(uint16_t x, uint8_t y, String str, uint8_t type, uint16_t color, uint16_t bgColor)
 {
   uint8_t uni[36] = { 0 };
@@ -943,6 +799,9 @@ void DFRobot_LcdDisplay::drawString(uint16_t x, uint8_t y, String str, uint8_t t
   uint8_t* dataPtr = data;
   uint16_t unicode = 0;
   uint8_t lenght = 0;
+  if (type > 1) {
+    type = 0;
+  }
   if (dataPtr == NULL) {
     DBG("data null");
   }
@@ -953,8 +812,12 @@ void DFRobot_LcdDisplay::drawString(uint16_t x, uint8_t y, String str, uint8_t t
     data[i] = str[i];
   }
 
+  uint8_t charCount = 0;   // Make the numerical text combination position calculation is not messy
   while (length > 0) {
     uint8_t len1 = utf8toUnicode(dataPtr, unicode);
+    if (unicode < 0x80) {
+      charCount++;
+    }
     length = length - len1;
     uni[lenght] = unicode >> 8;
     uni[lenght + 1] = unicode & 0xff;
@@ -966,9 +829,9 @@ void DFRobot_LcdDisplay::drawString(uint16_t x, uint8_t y, String str, uint8_t t
       drawStringHepler(x1, y1, uni, lenght, type, color, bgColor);
       lenght = 0;
       if ((type == 0) && (_font == eChinese)) {
-        x1 += 9 * (25);
+        x1 += 9 * (24) - charCount * 12;
       } else if ((type == 1) && (_font == eChinese)) {
-        x1 += 9 * (13);
+        x1 += 9 * (12) - charCount * 6;
       } else if ((type == 0) && (_font == eAscii)) {
         x1 += 9 * (12);
       } else if ((type == 1) && (_font == eAscii)) {
@@ -980,6 +843,7 @@ void DFRobot_LcdDisplay::drawString(uint16_t x, uint8_t y, String str, uint8_t t
       } else {
         x1 += 9 * (8);
       }
+      charCount = 0;
 
     }
   }

@@ -357,17 +357,6 @@ To use this library, please download the library file first, and paste it into t
    * @param end maximum value
    */
   void setMeterScale(sControlinf_t* obj,uint16_t angle,int16_t start,int16_t end);
-  
-  /**
-   * @fn drawString
-   * @brief Display text on the screen
-   * @param x The x-coordinate of the starting position
-   * @param y The y-coordinate of the starting position
-   * @param str The text to display
-   * @param type Text size (only applicable to eChinese and eAscii): 0 (24px size), 1 (12px size)
-   * @param color Color of text
-   */
-  void drawString(uint8_t x,uint8_t y,String str,uint8_t type,uint16_t color);
 
   /**
    * @fn drawString
@@ -377,7 +366,7 @@ To use this library, please download the library file first, and paste it into t
    * @param str The text to display
    * @param type Text size (only applicable to eChinese and eAscii): 0 (24px size), 1 (12px size)
    * @param color Color of text
-   * @param bgColor The color of the text background
+   * @param bgColor The color of the text background (0: Indicates that no background color is drawn)
    */
   void drawString(uint8_t x,uint8_t y,String str,uint8_t type,uint16_t color,uint16_t bgColor);
   
@@ -439,6 +428,7 @@ FireBeetle-M0        |      √       |              |             |
 ## History
 
 - 2023/05/29 - Version 1.0.0 released.
+- 2023/08/17 - Version 1.0.1 released.
 
 ## Credits
 

@@ -45,9 +45,7 @@ setGaugeValue	KEYWORD2
 creatCompass	KEYWORD2
 creatArc	KEYWORD2
 setArcRotation	KEYWORD2
-creatStations	KEYWORD2
 addChart	KEYWORD2
-setStationValue	KEYWORD2
 creatLineMeter	KEYWORD2
 creatChartSerie	KEYWORD2
 addChartPoint	KEYWORD2

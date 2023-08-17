@@ -362,17 +362,6 @@
    * @param end 终止值
    */
   void setMeterScale(sControlinf_t* obj,uint16_t angle,int16_t start,int16_t end);
-  
-  /**
-   * @fn drawString
-   * @brief 在屏幕上显示文字
-   * @param x 起始位置的x坐标
-   * @param y 起始位置的y坐标
-   * @param str 要显示的文字
-   * @param type 文字大小(只适用于eChinse和eAscii),0(24大小),1(12大小)
-   * @param color 文字的颜色
-   */
-  void drawString(uint8_t x,uint8_t y,String str,uint8_t type,uint16_t color);
 
   /**
    * @fn drawString
@@ -382,7 +371,7 @@
    * @param str 要显示的文字
    * @param type 文字大小(只适用于eChinse和eAscii),0(24大小),1(12大小)
    * @param color 文字的颜色
-   * @param bgColor 文字背景的颜色
+   * @param bgColor 文字背景的颜色 (0: 表示不绘制背景颜色)
    */
   void drawString(uint8_t x,uint8_t y,String str,uint8_t type,uint16_t color,uint16_t bgColor);
   
@@ -444,6 +433,7 @@ FireBeetle-M0        |      √       |              |             |
 ## 历史
 
 - 2023/05/29 - 1.0.0 版本
+- 2023/08/17 - 1.0.1 版本
 
 ## 创作者
 
