@@ -12,51 +12,67 @@ DFRobot_Lcd_UART	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+begin               KEYWORD2
+setBackgroundColor  KEYWORD2
+setBackgroundImg    KEYWORD2
+cleanScreen         KEYWORD2
+drawPixel           KEYWORD2
+drawLine            KEYWORD2
+updateLine          KEYWORD2
+deleteLine          KEYWORD2
+drawRect            KEYWORD2
+updateRect          KEYWORD2
+deleteRect          KEYWORD2
+drawCircle          KEYWORD2
+updateCircle        KEYWORD2
+deleteCircle        KEYWORD2
+drawTriangle        KEYWORD2
+updateTriangle      KEYWORD2
+deleteTriangle      KEYWORD2
+drawIcon            KEYWORD2
+setAngleIcon        KEYWORD2
+updateIcon          KEYWORD2
+updateIcon          KEYWORD2
+deleteIcon          KEYWORD2
+drawGif             KEYWORD2
+deleteGif           KEYWORD2
+creatSlider         KEYWORD2
+updateSlider        KEYWORD2
+setSliderValue      KEYWORD2
+deleteSlider        KEYWORD2
+creatBar            KEYWORD2
+updateBar           KEYWORD2
+setBarValue         KEYWORD2
+deleteBar           KEYWORD2
+creatChart          KEYWORD2
+updateChart         KEYWORD2
+creatChartSeries    KEYWORD2
+updateChartSeries   KEYWORD2
+addChartSeriesData  KEYWORD2
+updateChartPoint    KEYWORD2
+setTopChart         KEYWORD2
+deleteChart         KEYWORD2
+creatGauge          KEYWORD2
+updateGauge         KEYWORD2
+setGaugeValue       KEYWORD2
+deleteGauge         KEYWORD2
+creatCompass        KEYWORD2
+updateCompass       KEYWORD2
+void deleteCompass  KEYWORD2
+creatLineMeter      KEYWORD2
+updateLineMeter     KEYWORD2
+setMeterValue       KEYWORD2
+deleteLineMeter     KEYWORD2
+setTopLineMeter     KEYWORD2
+drawString          KEYWORD2
+updateString        KEYWORD2
+deleteString        KEYWORD2
+drawLcdTime         KEYWORD2
+updateLcdTime       KEYWORD2
+drawLcdDate         KEYWORD2
 
-begin	KEYWORD2
 
-drawPixel	KEYWORD2
-lvglInit	KEYWORD2
-fillScreen	KEYWORD2
-setBackLight	KEYWORD2
-drawLine	KEYWORD2
-drawRect	KEYWORD2
-fillRect	KEYWORD2
-drawRoundRect	KEYWORD2
-fillRoundRect	KEYWORD2
-drawCircle	KEYWORD2
-fillCircle	KEYWORD2
-drawTriangle	KEYWORD2
-fillTriangle	KEYWORD2
-drawIcon	KEYWORD2
-  
-reset	KEYWORD2
-creatSlider	KEYWORD2
-setSliderValue	KEYWORD2
-creatBar	KEYWORD2
-setBar	KEYWORD2
-creatChart	KEYWORD2
-setChartTickTexts	KEYWORD2 
-creatGauge	KEYWORD2
-setCompassScale	KEYWORD2
-setGaugeScale	KEYWORD2
-setGaugeRange	KEYWORD2
-setGaugeValue	KEYWORD2
-creatCompass	KEYWORD2
-creatArc	KEYWORD2
-setArcRotation	KEYWORD2
-addChart	KEYWORD2
-creatLineMeter	KEYWORD2
-creatChartSerie	KEYWORD2
-addChartPoint	KEYWORD2
-setMeterValue	KEYWORD2
-setMeterScale	KEYWORD2
-setMeterRange	KEYWORD2
-drawString	KEYWORD2
-drawStringHepler	KEYWORD2
-drawLcdDate	KEYWORD2
-drawLcdTime	KEYWORD2
-lvglDelete	KEYWORD2
+
 
 #######################################
 # Constants (LITERAL1)
@@ -385,23 +401,21 @@ eAlb	LITERAL1
 eKhmer	LITERAL1
 eKorean	LITERAL1
 
-
-BLACK_RGB565	LITERAL1
-BLUE_RGB565	LITERAL1
-RED_RGB565	LITERAL1
-GREEN_RGB565	LITERAL1
-CYAN_RGB565	LITERAL1
-MAGENTA_RGB565	LITERAL1
-YELLOW_RGB565	LITERAL1
-WHITE_RGB565	LITERAL1
-NAVY_RGB565	LITERAL1
-DARKGREEN_RGB565	LITERAL1
-DARKCYAN_RGB565	LITERAL1
-MAROON_RGB565	LITERAL1
-PURPLE_RGB565	LITERAL1
-OLIVE_RGB565	LITERAL1
-LIGHTGREY_RGB565	LITERAL1
-DARKGREY_RGB565	LITERAL1
-ORANGE_RGB565	LITERAL1
-GREENYELLOW_RGB565	LITERAL1
-DCYAN_RGB565	LITERAL1
+BLACK	LITERAL1
+BLUE	LITERAL1
+RED	LITERAL1
+GREEN	LITERAL1
+CYAN	LITERAL1
+MAGENTA	LITERAL1
+YELLOW	LITERAL1
+WHITE	LITERAL1
+NAVY	LITERAL1
+DARKGREEN	LITERAL1
+DARKCYAN	LITERAL1
+MAROON	LITERAL1
+PURPLE	LITERAL1
+OLIVE	LITERAL1
+LIGHTGREY	LITERAL1
+DARKGREY	LITERAL1
+ORANGE	LITERAL1
+GREENYELLOW	LITERAL1

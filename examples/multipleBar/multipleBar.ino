@@ -8,13 +8,14 @@
  * @license     The MIT License (MIT)
  * @author [fengli](li.feng@dfrobot.com)
  * @maintainer [qsjhyy](yihuan.huang@dfrobot.com)
- * @version  V1.0
- * @date  2023-05-29
+ * @maintainer [GDuang](yonglei.ren@dfrobot.com)
+ * @version  V2.0
+ * @date  2024-03-19
  * @url https://github.com/DFRobot/DFRobot_LcdDisplay
  */
 #include "DFRobot_LcdDisplay.h"
 
-#define I2C_COMMUNICATION  // I2C communication. If you want to use UART communication, comment out this line of code.
+//#define I2C_COMMUNICATION  // I2C communication. If you want to use UART communication, comment out this line of code.
 
 #ifdef  I2C_COMMUNICATION
   /**
@@ -35,15 +36,70 @@
   DFRobot_Lcd_UART lcd(FPSerial);
 #endif
 
-DFRobot_LcdDisplay::sControlinf_t *bar1, *bar2, *bar3;   // Progress bar handle
-
 /**
  * User-selectable macro definition color
- * BLACK_RGB565 BLUE_RGB565 RED_RGB565 GREEN_RGB565 CYAN_RGB565 MAGENTA_RGB565
- * YELLOW_RGB565 WHITE_RGB565 NAVY_RGB565 DARKGREEN_RGB565 DARKCYAN_RGB565 MAROON_RGB565
- * PURPLE_RGB565 OLIVE_RGB565 LIGHTGREY_RGB565 DARKGREY_RGB565 ORANGE_RGB565
- * GREENYELLOW_RGB565 DCYAN_RGB565
+ * BLACK BLUE RED GREEN CYAN MAGENTA
+ * YELLOW WHITE NAVY DARKGREEN DARKCYAN MAROON
+ * PURPLE OLIVE LIGHTGREY DARKGREY ORANGE
+ * GREENYELLOW 
  */
+// fill color
+uint32_t barColor = 0x00FF00;
+// Generate random colors
+uint32_t generateRandomColor() {
+    uint8_t r = rand() % 256;
+    uint8_t g = rand() % 256;
+    uint8_t b = rand() % 256;
+    return (r << 16) | (g << 8) | b;
+}
+uint8_t barId[11];
+void testBar(){
+	  // Create a vertical progress bar
+    barId[0] = lcd.creatBar(/*x = */0, /*y = */10, /*width=*/10, /*height=*/200, /*progress bar color*/RED);
+    // Set the value of the progress bar to 50
+    lcd.setBarValue(barId[0],50);
+    // Change the position of the progress bar (from left to right) and set the color to random
+    for(uint8_t i = 0; i <= 10; i++){
+      barColor = generateRandomColor();
+      lcd.updateBar(barId[0],i*31, 10, 10, 200, barColor);
+      delay(100);
+    }
+  	// Change the position of the progress bar (from right to left) and set the color to random
+    for(uint8_t i = 0; i <= 10; i++){
+      barColor = generateRandomColor();
+      lcd.updateBar(barId[0],310-i*31, 10, 10, 200, barColor);
+      delay(100);
+    }
+    delay(1000);
+    // Create multiple progress bars with random colors, decreasing in height, from left to right
+    for(uint8_t i = 1; i <= 10; i++){
+      barColor = generateRandomColor();
+      barId[i] = lcd.creatBar(i*31, 10, 10, 200 - i*10, barColor);
+      delay(100);
+      
+    }
+    delay(1000);
+    // Set a random value for each progress bar in turn
+    for(uint8_t i = 0; i<=10; i++){
+      lcd.setBarValue(barId[i],rand()%100);
+      delay(100);
+    }
+    delay(1000);
+    // Change the progress bar in turn, changing its position, width, height, and color, changing it to the effect of a horizontal progress bar
+    for(uint8_t i = 0; i<=10; i++){
+      barColor = generateRandomColor();
+      lcd.updateBar(barId[i], 10, i*23, 310 -i*20 , 10, barColor);
+      delay(100);
+    }
+    delay(1000);
+    // Delete all progress bars one by one
+    for(uint8_t i = 0 ; i <= 10; i++){
+      lcd.deleteBar(barId[i]);
+      delay(100);
+    }
+
+}
+
 void setup(void)
 {
   #ifndef  I2C_COMMUNICATION
@@ -56,25 +112,16 @@ void setup(void)
 
   Serial.begin(115200);
 
+  // Initializing 
   lcd.begin();
-  //Initializing 
-  lcd.lvglInit(/*Displaying the background color*/CYAN_RGB565);
-  //Creating a progress bar control.
-  bar1 = lcd.creatBar(/*x = */10,/*y = */10,/*width=*/270,/*height=*/40,/*progress bar color*/ORANGE_RGB565);
-  bar2 = lcd.creatBar(10,90,270,50,YELLOW_RGB565);
-  bar3 = lcd.creatBar(10,170,270,50,LIGHTGREY_RGB565);
+  lcd.cleanScreen();
+  delay(500);
+  lcd.setBackgroundColor(/*Displaying the background color*/WHITE);
+  
 }
 
 void loop(void)
 {
-  //Setting the value of the progress bar, which can include a unit, but must start with a number.
-  lcd.setBar(bar1,"80°C");
-  lcd.setBar(bar2,"10°C");
-  lcd.setBar(bar3,"20°C");
-  delay(2000);
-
-  lcd.setBar(bar1,"30°C");
-  lcd.setBar(bar2,"80°C");
-  lcd.setBar(bar3,"50°C");
-  delay(2000);
+  testBar();
+  delay(1000);
 }

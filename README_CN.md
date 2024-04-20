@@ -1,5 +1,5 @@
 # DFRobot_LcdDisplay
-- [English Version](./README.md)
+- [中文版](./README_CN.md)
 
   该产品是一块I2C驱动和UART的tft显示屏,屏幕里面内置固件,集成了部分lvgl控件,和GDL图形显示
 并在硬件上集成了一块GT30L24A3W字库芯片,支持多个国家的语言显示,并且在固件芯片上内置
@@ -27,354 +27,600 @@
 ## 方法
 
 ```C++
-  /**
-   * @fn drawPixel
-   * @brief 绘制像素点
-   * @param x 像素点的x坐标位置
-   * @param y 像素点的y坐标位置
-   * @param color 像素点的色彩，RGB565格式
+   /**
+   * @fn begin
+   * @brief 初始化函数
+   * @return bool类型，初始化状态
+   * @retval true 成功
+   * @retval false 失败
    */
-  void drawPixel(int16_t x, int16_t y, uint16_t color);
-  
-  /**
-   * @fn lvglInit
-   * @brief 初始化lvgl,但是用lvgl的控件或者图标时,需要调用此函数 
-   * @param bg_color lvgl背景颜色
-   */
-  void lvglInit(uint16_t bg_color = 0xffee);
+  bool begin();
 
   /**
-   * @fn setFont
-   * @brief 设置字体, 方便计算一连串字体的显示位置
-   * @param font 字体种类, eLcdFont_t
+   * @fn setBackgroundColor
+   * @brief 设置背景颜色对象
+   * @param bg_color RGB888格式
    */
-  void setFont(eLcdFont_t font);
+  void setBackgroundColor(uint32_t bg_color = 0xFF0000);
+
   /**
-   * @fn fillScreen
-   * @brief 填充整个屏幕
-   * @param color屏幕填充的色彩，RGB565格式
+   * @fn setBackgroundImg
+   * @brief 设置背景图片对象
+   * @param location 内置或外置图片
+   * @param str 图片路径
    */
-  void fillScreen(uint16_t color);
-  
+  void setBackgroundImg(uint8_t location, String str);
+
   /**
-   * @fn setBackLight
-   * @brief 设置屏幕背光
-   * @param on true(打开)/false(关闭)
+   * @fn cleanScreen
+   * @brief 清屏，清除屏幕中的所有控件对象
    */
-  void setBackLight(bool on);
-  
+  void cleanScreen();
+
+  /**
+   * @fn drawPixel
+   * @brief 在屏幕上画一个像素点
+   * @param x 像素点的x坐标
+   * @param y 像素点的y坐标
+   * @param color 像素点的颜色
+   */
+  void drawPixel(int16_t x, int16_t y, uint32_t color);
+
   /**
    * @fn drawLine
    * @brief 在屏幕上画一条直线
-   * @param x0 直线起点x坐标
-   * @param y0 直线起点y坐标
-   * @param x1 直线终点x坐标
-   * @param y1 直线终点y坐标
-   * @param color 线段的颜色，RGB565格式
+   * @param x0 直线的起点x坐标
+   * @param y0 直线的起点y坐标
+   * @param x1 直线的终点x坐标
+   * @param y1 直线的终点y坐标
+   * @param width 线宽
+   * @param color 直线颜色，RGB888格式
+   * @return 直线控件句柄
    */
-  void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
-  
+  uint8_t drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t width, uint32_t color);
+
+  /**
+   * @fn updateLine
+   * @brief 在屏幕上更新一条直线
+   * @param id 直线控件句柄
+   * @param x0 直线的起点x坐标
+   * @param y0 直线的起点y坐标
+   * @param x1 直线的终点x坐标
+   * @param y1 直线的终点y坐标
+   * @param width 线宽
+   * @param color 直线颜色，RGB888格式
+   */
+  void updateLine(uint8_t id, int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t width, uint32_t color);
+
+  /**
+   * 
+   * @fn deleteLine
+   * @brief 删除直线对象
+   * @param id 直线控件句柄
+   */
+  void deleteLine(uint8_t id);
+
   /**
    * @fn drawRect
-   * @brief 在屏幕上画矩形
-   * @param x 矩形起点x坐标
-   * @param y 矩形起点y坐标
+   * @brief 在屏幕上画一个矩形
+   * @param x 矩形的起点x坐标
+   * @param y 矩形的起点y坐标
    * @param w  矩形的宽度
    * @param h  矩形的高度
-   * @param color 矩形颜色
+   * @param borderWidth 边框宽度
+   * @param borderColor 边框颜色
+   * @param fill 是否填充
+   * @param fillColor 填充颜色
+   * @param rounded 是否圆角
+   * @return 矩形控件句柄
+   * 
    */
-  void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-  
-  /**
-   * @fn fillRect
-   * @brief 在屏幕上填充矩形
-   * @param x 矩形起点x坐标
-   * @param y 矩形起点y坐标
-   * @param w  矩形的宽度
-   * @param h  矩形的高度
-   * @param color 矩形颜色
-   */
-  void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-  
-  /**
-   * @fn drawRoundRect
-   * @brief 在屏幕上画圆角矩形
-   * @param x0 矩形起点x坐标
-   * @param y0 矩形起点y坐标
-   * @param w  矩形的宽度
-   * @param h  矩形的高度
-   * @param radius  圆角半径
-   * @param color 矩形颜色
-   */
-  void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,
-      int16_t radius, uint16_t color);
+  uint8_t drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t borderWidth, uint32_t borderColor, uint8_t fill, uint32_t fillColor, uint8_t rounded);
 
   /**
-   * @fn fillRoundRect
-   * @brief 在屏幕上填充圆角矩形
-   * @param x0 矩形起点x坐标
-   * @param y0 矩形起点y坐标
+   * @fn updateRect
+   * @brief 更新屏幕上的矩形
+   * @param id 矩形控件的id
+   * @param x 矩形的起点x坐标
+   * @param y 矩形的起点y坐标
    * @param w  矩形的宽度
    * @param h  矩形的高度
-   * @param radius  圆角半径
-   * @param color 矩形颜色
+   * @param borderWidth 边框宽度
+   * @param borderColor 边框颜色
+   * @param fill 是否填充
+   * @param fillColor 填充颜色
+   * @param rounded 是否圆角
+   * 
    */
-  void fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,
-      int16_t radius, uint16_t color);
+  void updateRect(uint8_t id, int16_t x, int16_t y, int16_t w, int16_t h, uint8_t borderWidth, uint32_t borderColor, uint8_t fill, uint32_t fillColor, uint8_t rounded);
   
+  /**
+   * 
+   * @fn deleteRect
+   * @brief 删除矩形控件对象
+   * @param id 矩形控件的id
+   */
+  void deleteRect(uint8_t id);
+
   /**
    * @fn drawCircle
-   * @brief 在屏幕画圆
-   * @param x0 圆心x坐标
-   * @param y0 圆心y坐标
+   * @brief 在屏幕上画圆圈
+   * @param x 圆心x坐标
+   * @param y 圆心y坐标
    * @param r  圆的半径
-   * @param color 圆的颜色
+   * @param borderWidth 边框宽度
+   * @param borderColor 边框颜色
+   * @param fill 是否填充
+   * @param fillColor 填充颜色
+   * @return 圆形控件句柄
    */
-  void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+  uint8_t drawCircle(int16_t x, int16_t y, int16_t r, uint8_t borderWidth, uint32_t borderColor, uint8_t fill, uint32_t fillColor);
 
   /**
-   * @fn fillCircle
-   * @brief 在屏幕填充圆
-   * @param x0 圆心x坐标
-   * @param y0 圆心y坐标
+   * @fn updateCircle
+   * @brief 更新屏幕上的圆圈
+   * @param id 圆形控件句柄
+   * @param x 圆心x坐标
+   * @param y 圆心y坐标
    * @param r  圆的半径
-   * @param color 圆的颜色
+   * @param borderWidth 边框宽度
+   * @param borderColor 边框颜色
+   * @param fill 是否填充
+   * @param fillColor 填充颜色
    */
-  void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+  void updateCircle(uint8_t id, int16_t x, int16_t y, int16_t r, uint8_t borderWidth, uint32_t borderColor, uint8_t fill, uint32_t fillColor);
+
+  /**
+   * 
+   * @fn deleteCircle
+   * @brief 删除圆形控件
+   * @param id 圆形控件句柄
+   */
+  void deleteCircle(uint8_t id);
 
   /**
    * @fn drawTriangle
-   * @brief 在屏幕画一个三角形
+   * @brief 在屏幕上画一个三角形
    * @param x0 三角形第一个点的x坐标
    * @param y0 三角形第一个点的y坐标
    * @param x1 三角形第二个点的x坐标
    * @param y1 三角形第二个点的y坐标
    * @param x2 三角形第三个点的x坐标
    * @param y2 三角形第三个点的y坐标
-   * @param color 圆的颜色
+   * @param borderWidth 边框宽度
+   * @param borderColor 边框颜色
+   * @param fill 是否填充
+   * @param fillColor 填充颜色
+   * @return 三角形控件句柄
    */
-  void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-      int16_t x2, int16_t y2, uint16_t color);
+  uint8_t drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t borderWidth, uint32_t borderColor, uint8_t fill, uint32_t fillColor);
+
+ /**
+   * @fn updateTriangle
+   * @brief Draw a triangle on the screen
+   * @param id 三角形控件的id
+   * @param x0 三角形第一个点的x坐标
+   * @param y0 三角形第一个点的y坐标
+   * @param x1 三角形第二个点的x坐标
+   * @param y1 三角形第二个点的y坐标
+   * @param x2 三角形第三个点的x坐标
+   * @param y2 三角形第三个点的y坐标
+   * @param borderWidth 边框宽度
+   * @param borderColor 边框颜色
+   * @param fill 是否填充
+   * @param fillColor 填充颜色
+   */
+  void updateTriangle(uint8_t id, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t borderWidth, uint32_t borderColor, uint8_t fill, uint32_t fillColor);
 
   /**
-   * @fn fillTriangle
-   * @brief 在屏幕填充一个三角形
-   * @param x0 三角形第一个点的x坐标
-   * @param y0 三角形第一个点的y坐标
-   * @param x1 三角形第二个点的x坐标
-   * @param y1 三角形第二个点的y坐标
-   * @param x2 三角形第三个点的x坐标
-   * @param y2 三角形第三个点的y坐标
-   * @param color 圆的颜色
+   * 
+   * @fn deleteTriangle
+   * @brief 删除三角形控件
+   * @param id 三角形控件句柄
    */
-  void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-      int16_t x2, int16_t y2, uint16_t color);
+  void deleteTriangle(uint8_t id);
 
   /**
    * @fn drawIcon
-   * @brief 绘制一个图标
-   * @param x 三角形第一个点的x坐标
-   * @param y 三角形第一个点的y坐标
-   * @param id 三角形第二个点的x坐标
-   * @param size 三角形第二个点的y坐标
-   * @return 图标控件的对象
+   * @brief 绘制图标
+   * @param x 图标第一个点的x坐标
+   * @param y 图标第一个点的y坐标
+   * @param id 图标对应的枚举值
+   * @param size 图标缩放系数
+   * @return 图标控件句柄
    */
-  sControlinf_t * drawIcon(int16_t x,int16_t y,uint8_t id,uint16_t size = 255);
-  
+  uint8_t drawIcon(int16_t x, int16_t y, uint16_t id, uint16_t size = 255);
+
   /**
-   * @fn drawDiskImg
-   * @brief 绘制u盘里面的图片(bmp或者png)
-   * @param x 图片第一个点的x坐标
-   * @param y 图片第一个点的y坐标
-   * @param str 图片完整文件名, 如 "/img/cat.bmp"
-   * @param size 图片大小缩放系数
-   * @return 图片控件的对象
-   * @note 因ram较小, bmp 和 png 的规格有限制
+   * @fn drawIcon
+   * @brief 绘制U盘中的图标
+   * @param x 图标第一个点的x坐标
+   * @param y 图标第一个点的y坐标
+   * @param str 图片路径
+   * @param zoom 图标缩放系数
+   * @return 图标控件句柄
    */
-  sControlinf_t* drawDiskImg(int16_t x, int16_t y, String str, uint16_t size = 255);
+  uint8_t drawIcon(int16_t x, int16_t y, String str, uint16_t zoom);
+
+  /**
+   * @fn setAngleIcon
+   * @brief 设置图标的角度
+   * @param id 图标控件句柄
+   * @param angle 旋转角度
+   */
+  void setAngleIcon(uint8_t id, int16_t angle);
+
+  /**
+   * @fn updateIcon
+   * @brief 更新图标
+   * @param x 图标第一个点的x坐标
+   * @param y 图标第一个点的y坐标
+   * @param iconNum 图标对应的枚举值
+   * @param size 图标缩放系数
+   */
+  void updateIcon(uint8_t iconId, int16_t x, int16_t y, uint16_t iconNum, uint16_t size);
+
+  /**
+   * @fn updateIcon
+   * @brief 更新图标
+   * @param x 图标第一个点的x坐标
+   * @param y 图标第一个点的y坐标
+   * @param str 图片路径
+   * @param zoom 图标缩放系数
+   */
+  void updateIcon(uint8_t iconId, int16_t x, int16_t y, String str, uint16_t zoom);
+
+  /**
+   * @fn deleteIcon
+   * @brief 删除图标
+   * @param id 图标控件句柄
+   */
+  void deleteIcon(uint8_t id);
+
+  /**
+   * @fn drawIcon
+   * @brief 绘制动图
+   * @param x 动图第一个点的x坐标
+   * @param y 动图第一个点的y坐标
+   * @param id 动图对应的枚举值
+   * @param size 动图缩放系数
+   * @return 动图控件句柄
+   */
+  uint8_t drawGif(int16_t x, int16_t y, uint16_t id, uint16_t size = 255);
+
+  /**
+   * @fn drawGif
+   * @brief 绘制外置动图
+   * @param x 动图第一个点的x坐标
+   * @param y 动图第一个点的y坐标
+   * @param str 动图路径
+   * @param zoom 动图缩放系数
+   * @return 动图控件句柄
+   */
+  uint8_t drawGif(int16_t x, int16_t y, String str, uint16_t zoom);
+
+  /**
+   * @fn updateIcon
+   * @brief 删除动图控件
+   * @param id 动图控件句柄
+   */
+  void deleteGif(uint8_t id);
 
   /**
    * @fn creatSlider
-   * @brief 创建一个滑条控件
-   * @param x 滑条的x坐标
-   * @param y 滑条的y坐标
-   * @param width 滑条的宽度
-   * @param height 滑条的高度
-   * @param color 滑条的颜色
-   * @return 滑条控件的对象
+   * @brief 创建一个滑块控件
+   * @param x 滑块的x坐标
+   * @param y 滑块的y坐标
+   * @param width 滑块的宽度
+   * @param height 滑动杆的高度
+   * @param color 滑块的颜色
+   * @return 滑块控件句柄
    */
-  sControlinf_t *creatSlider(uint16_t x,uint16_t y,uint8_t width,uint8_t height, uint16_t color);
-  
+  uint8_t creatSlider(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
+
+    /**
+   * @fn updateSlider
+   * @brief 更改一个滑块控件
+   * @param id 滑块控件句柄
+   * @param x 滑块的x坐标
+   * @param y 滑块的y坐标
+   * @param width 滑块的宽度
+   * @param height 滑动杆的高度
+   * @param color 滑块的颜色
+   */
+  void updateSlider(uint8_t id, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
+
   /**
    * @fn setSliderValue
-   * @brief 设置滑条的值
-   * @param obj 滑条控件的对象
-   * @param value 滑条的值
+   * @brief 设置滑动条的值
+   * @param sliderId 滑块控件句柄
+   * @param value 滑块的值
    */
-  void setSliderValue(sControlinf_t* obj,uint8_t value);
-  
+  void setSliderValue(uint8_t sliderId, uint16_t value);
+
+  /**
+   * 
+   * @fn deleteSlider
+   * @brief 删除滑块控件
+   * @param id 滑块控件句柄
+   */
+  void deleteSlider(uint8_t id);
+
   /**
    * @fn creatBar
-   * @brief 创建一个进度条控件
+   * @brief 创建进度条控件
    * @param x 进度条的x坐标
    * @param y 进度条的y坐标
    * @param width 进度条的宽度
    * @param height 进度条的高度
    * @param color 进度条的颜色
-   * @return 进度条控件的对象
+   * @return 进度条句柄
    */
-  sControlinf_t *creatBar(uint16_t x,uint16_t y,uint16_t width,uint8_t height, uint16_t color);
-  
+  uint8_t creatBar(uint16_t x, uint16_t y, uint16_t width, uint8_t height, uint32_t color);
+
   /**
-   * @fn setBar
-   * @brief 创建一个滑条控件
-   * @param obj 滑条控件的对象
-   * @param str 滑条的值
+   * @fn updateBar
+   * @brief 更新进度条控件
+   * @param id 进度条句柄
+   * @param x 进度条的x坐标
+   * @param y 进度条的y坐标
+   * @param width 进度条的宽度
+   * @param height 进度条的高度
+   * @param color 进度条的颜色
    */
-  void setBar(sControlinf_t* obj,String str);
-  
+  void updateBar(uint8_t id, uint16_t x, uint16_t y, uint16_t width, uint8_t height, uint32_t color);
+
+  /**
+   * @fn setBarValue
+   * @brief 设置进度条的值，进度条可以包含一个单位，但必须以数字开头
+   * @param barId 进度条控件句柄
+   * @param value 进度条的值
+   */
+  void setBarValue(uint8_t barId, uint16_t value);
+
+  /**
+   * 
+   * @fn deleteBar
+   * @brief 删除进度条
+   * @param id 进度条控件的句柄
+   */
+  void deleteBar(uint8_t id);
+
   /**
    * @fn creatChart
    * @brief 创建一个图表控件
-   * @param strX 图表x轴上的标签
-   * @param strY 图表y轴上的标签
-   * @param type 图表的类型(折线图/柱状图)
-   * @return 图表控件的对象
+   * @param strX 在图表的x轴上标记
+   * @param strY 在图表的y轴上标记
+   * @param bgColor 背景颜色
+   * @param type 图表类型(折线图/条形图)
+   * @return 图表控件句柄
    */
-  sControlinf_t *creatChart(String strX,String strY, uint8_t type);
+  uint8_t creatChart(String strX, String strY, uint32_t bgColor, uint8_t type);
+
+  /**
+   * @fn updateChart
+   * @brief 更新图表控件
+   * @param id 图表控件句柄
+   * @param bgColor 背景颜色
+   * @param type 图表类型(折线图/条形图)
+   */
+  void updateChart(uint8_t id, uint32_t bgColor, uint8_t type);
+
+  /**
+   * @fn creatChartSeries
+   * @brief 在图表中创建折线图或条形图序列
+   * @param chartId 图表控件句柄
+   * @param color 折线图/条形图的颜色
+   * @return 返回序列的索引
+   */
+  uint8_t creatChartSeries(uint8_t chartId, uint32_t color);
+
+  /**
+   * @fn updateChartSeries
+   * @brief 更新图表中的折线图或条形图序列
+   * @param chartId 图表控件句柄
+   * @param seriesId 数据序列的索引
+   * @param color 折线图/条形图的颜色
+   */
+  void updateChartSeries(uint8_t chartId, uint8_t seriesId, uint32_t color);
+
+  /**
+   * @fn addChart
+   * @brief 分配一个数据序列并将其添加到图表中
+   * @param chartId 图表控件句柄
+   * @param SeriesId 分配的数据序列
+   * @param point 曲线图/条形图需要一组数据
+   * @param len  数组长度
+   * @return 返回序列的索引
+   */
+  uint8_t addChartSeriesData(uint8_t chartId, uint8_t SeriesId, uint16_t point[], uint8_t len);
+
+  /**
+   * @fn updateChartPoint
+   * @brief 更新图表中某点的值
+   * @param chartId 图表控件句柄
+   * @param SeriesId 分配的数据序列号
+   * @param pointNum 点编号
+   * @param value  值
+   */
+  void updateChartPoint(uint8_t chartId, uint8_t SeriesId, uint8_t pointNum, uint16_t value);
   
   /**
-   * @fn creatChartSerie
-   * @brief 在图表中创建折线图或柱状图
-   * @param obj 图表控件的对象
-   * @param color 折线图/柱状图的颜色
-   * @return 返回图的编号
+   * 
+   * @fn setTopChart
+   * @brief 设置图表控件在最顶层的图层
+   * @param id 图表控件句柄
    */
-  uint8_t creatChartSerie(sControlinf_t* obj,uint16_t color);
-  
-  
+  void setTopChart(uint8_t id);
+
+  /**
+   * 
+   * @fn deleteChart
+   * @brief 删除图表控件
+   * @param id 图表控件句柄
+   */
+  void deleteChart(uint8_t id);
+
   /**
    * @fn creatGauge
-   * @brief 创建一个表盘控件
-   * @param x 控件所在x轴坐标
-   * @param y 控件所在y轴坐标
-   * @param width  控件的宽度
-   * @param height 控件的高度
-   * @param color 控件的颜色
-   * @return 表盘控件的对象
+   * @brief 创建一个仪表盘控件
+   * @param x 控件的x轴坐标
+   * @param y 控件的y轴坐标
+   * @param diameter  仪表盘的直径
+   * @param start 初始值
+   * @param end 终值
+   * @param pointerColor 指针颜色
+   * @param bgColor 背景颜色
+   * @return 仪表盘控件句柄
    */
-  sControlinf_t *creatGauge(uint16_t x,uint16_t y,uint8_t width,uint8_t height, uint16_t color);
-  
-  
+  uint8_t creatGauge(uint16_t x, uint16_t y, uint16_t diameter, uint16_t start, uint16_t end, uint32_t pointerColor, uint32_t bgColor);
+
   /**
-   * @fn setCompassScale
-   * @brief 设置指南针指针的角度
-   * @param obj 指南针的对象
-   * @param scale 指针角度(0~360)
+   * @fn updateGauge
+   * @brief 更新仪表盘控件
+   * @param x 控件的x轴坐标
+   * @param y 控件的y轴坐标
+   * @param diameter  仪表盘的直径
+   * @param start 初始值
+   * @param end 终值
+   * @param pointerColor 指针颜色
+   * @param bgColor 背景颜色
    */
-  void setCompassScale(sControlinf_t* obj,uint16_t scale);
-  
-  /**
-   * @fn setGaugeScale
-   * @brief 设置表盘的参数
-   * @param obj 表盘的对象
-   * @param angle 刻度角 (0..360)
-   * @param start 起始值
-   * @param end 终止值
-   */
-  void setGaugeScale(sControlinf_t* obj,uint16_t angle,int16_t start,int16_t end);
+  void updateGauge(uint8_t id, uint16_t x, uint16_t y, uint16_t diameter, uint16_t start, uint16_t end, uint32_t pointerColor, uint32_t bgColor);
 
   /**
    * @fn setGaugeValue
-   * @brief 设置表盘指针的值
-   * @param obj 表盘对象
-   * @param value 新的指针值
+   * @brief设置表盘指示的值
+   * @param gaugeId 仪表盘控件句柄
+   * @param value 新值
    */
-  void setGaugeValue(sControlinf_t* obj,uint16_t value);
+  void setGaugeValue(uint8_t gaugeId, uint16_t value);
+
+  /**
+   * 
+   * @fn deleteGauge
+   * @brief 删除仪表盘
+   * @param id 仪表盘控件句柄
+   */
+  void deleteGauge(uint8_t id);
 
   /**
    * @fn creatCompass
    * @brief 创建一个指南针控件
-   * @param x 控件所在x轴坐标
-   * @param y 控件所在y轴坐标
-   * @param width  控件的宽度
-   * @param height 控件的高度
-   * @param color 控件的颜色
-   * @return 指南针控件的对象
+   * @param x 控件的x轴坐标
+   * @param y 控件的y轴坐标
+   * @param diameter  指南针控件直径
+   * @return 指南针控件句柄
    */
-  sControlinf_t *creatCompass(uint16_t x,uint16_t y,uint8_t width,uint8_t height, uint16_t color);
+  uint8_t creatCompass(uint16_t x, uint16_t y, uint16_t diameter);
 
   /**
-   * @fn creatArc
-   * @brief 创建一个角度控件
-   * @param x 控件所在x轴坐标
-   * @param y 控件所在y轴坐标
-   * @param width  控件的宽度
-   * @param height 控件的高度
-   * @return 角度控件的对象
+   * @fn updateCompass
+   * @brief 更新指南针控件
+   * @param id 指南针控件句柄
+   * @param x 控件的x轴坐标
+   * @param y 控件的y轴坐标
+   * @param diameter  指南针控件直径
    */
-  sControlinf_t *creatArc(uint16_t x,uint16_t y,uint8_t width,uint8_t height);
-  
-  /**
-   * @fn setArcRotation
-   * @brief 设置角度控件数值
-   * @param obj 角度控件的对象
-   * @param rotation 新的角度值
-   */
-  void setArcRotation(sControlinf_t* obj,uint16_t rotation);
+  void updateCompass(uint8_t id, uint16_t x, uint16_t y, uint16_t diameter);
 
   /**
-   * @fn addChart
-   * @brief 分配并添加一个数据序列到图表中
-   * @param obj 图表控件的对象
-   * @param id 分配的数据序列
-   * @param point 曲线图/柱状图需要数据的数组
-   * @param len  数组长度
+   * @fn setCompassScale
+   * @brief 设置罗盘指针的角度
+   * @param compassId 指南针控件的id
+   * @param scale 指针角度(0~360)
    */
-  uint8_t addChart(sControlinf_t* obj,uint8_t id,uint16_t point[],uint8_t len);
+  void setCompassScale(uint8_t compassId, uint16_t scale);
+
+  /**
+   * 
+   * @fn deleteCompass
+   * @brief 删除指南针
+   * @param id 指南针控件句柄
+   */
+  void deleteCompass(uint8_t id);
 
   /**
    * @fn creatLineMeter
-   * @brief 创建一个线形仪表控件
-   * @param x 控件所在x轴坐标
-   * @param y 控件所在y轴坐标
-   * @param width  控件的宽度
-   * @param height 控件的高度
-   * @param color 控件的颜色
-   * @return 线形仪表控件的对象
+   * @brief 创建一个线性仪表控件
+   * @param x 控件的x轴坐标
+   * @param y 控件的y轴坐标
+   * @param size  线性仪表的大小
+   * @param start 最小值
+   * @param end 最大值
+   * @param pointerColor 指针颜色
+   * @param bgColor 背景颜色
+   * @return 线性仪表句柄
    */
-  sControlinf_t *creatLineMeter(uint16_t x,uint16_t y,uint8_t width,uint8_t height, uint16_t color);
+  uint8_t creatLineMeter(uint16_t x, uint16_t y, uint16_t size, uint16_t start, uint16_t end, uint32_t pointerColor, uint32_t bgColor);
+
+  /**
+   * @fn updateLineMeter
+   * @brief 更新一个线性仪表控件
+   * @param id 线性仪表句柄
+   * @param x 控件的x轴坐标
+   * @param y 控件的y轴坐标
+   * @param size  线性仪表的大小
+   * @param start 最小值
+   * @param end 最大值
+   * @param pointerColor 指针颜色
+   * @param bgColor 背景颜色
+   */
+  void updateLineMeter(uint8_t id, uint16_t x, uint16_t y, uint16_t size, uint16_t start, uint16_t end, uint32_t pointerColor, uint32_t bgColor);
 
   /**
    * @fn setMeterValue
-   * @brief 在线形仪表控件上设置一个新值
-   * @param obj 指向线形仪表控件对象的指针
-   * @param value 新的值
+   * @brief 在线形仪表控件上设置指定值
+   * @param lineMeterId 线形仪表控件句柄
+   * @param value 新值
    */
-  void setMeterValue(sControlinf_t* obj,uint16_t value);
-  
-  /**
-   * @fn setMeterScale
-   * @brief 设置线形仪表控件的刻度
-   * @param obj 指向线形仪表控件对象的指针
-   * @param angle 刻度角 (0..360)
-   * @param start 起始值
-   * @param end 终止值
-   */
-  void setMeterScale(sControlinf_t* obj,uint16_t angle,int16_t start,int16_t end);
+  void setMeterValue(uint8_t lineMeterId, uint16_t value);
 
   /**
-   * @fn drawString
-   * @brief 在屏幕上显示文字
+   * @fn deleteLineMeter
+   * @brief 删除线性仪表控件
+   * @param id 线性仪表控件的id
+   */
+  void deleteLineMeter(uint8_t id);
+
+  /**
+   * @fn setTopLineMeter
+   * @brief 设置线性仪表在最顶层的图层显示
+   * @param id 线性仪表控件的id
+   */
+  void setTopLineMeter(uint8_t id);
+
+  /**
+   * @fn drawString(uint8_t x, uint8_t y, String str, uint8_t type, uint16_t color, uint16_t bgColor)
+   * @brief 在屏幕上显示文本
    * @param x 起始位置的x坐标
    * @param y 起始位置的y坐标
-   * @param str 要显示的文字
-   * @param type 文字大小(只适用于eChinse和eAscii),0(24大小),1(12大小)
-   * @param color 文字的颜色
-   * @param bgColor 文字背景的颜色 (0: 表示不绘制背景颜色)
+   * @param str 要显示的文本
+   * @param fontSize 文字大小(只适用于中文及英文):0 (24px大小)，1 (12px大小)
+   * @param color 文本颜色
+   * @return 文本控件句柄
    */
-  void drawString(uint8_t x,uint8_t y,String str,uint8_t type,uint16_t color,uint16_t bgColor);
-  
+  uint8_t drawString(uint16_t x, uint16_t y, String str, uint8_t fontSize, uint32_t color);
+
+  /**
+   * @fn updateString
+   * @brief 在屏幕上更新显示的文本
+   * @param id 控件id
+   * @param x 起始位置的x坐标
+   * @param y 起始位置的y坐标
+   * @param str 要显示的文本
+   * @param fontSize 文字大小(只适用于中文及英文):0 (24px大小)，1 (12px大小)
+   * @param color 文本颜色
+   */
+  void updateString(uint8_t id, uint16_t x, uint16_t y, String str, uint8_t fontSize, uint32_t color);
+
+  /**
+   * @fn deleteString
+   * @brief 在屏幕上删除文本
+   * @param id 文本控件句柄
+   */
+  void deleteString(uint8_t id);
+
   /**
    * @fn drawLcdTime
    * @brief 在屏幕上显示设置的时间
@@ -385,9 +631,23 @@
    * @param seconds 秒
    * @param fontSize 字体大小
    * @param color 字体颜色
-   * @param bgColor 字体背景颜色
+   * @return 时间控件句柄
    */
-  void drawLcdTime(uint8_t x,uint8_t y,uint8_t hour,uint8_t Minute,uint8_t seconds,uint8_t fontSize ,uint16_t color,uint16_t bgColor);
+  uint8_t drawLcdTime(uint8_t x, uint8_t y, uint8_t hour, uint8_t Minute, uint8_t seconds, uint8_t fontSize, uint16_t color);
+
+  /**
+   * @fn updateLcdTime
+   * @brief 在屏幕上显示更新的时间
+   * @param id 
+   * @param x 起始位置的x坐标
+   * @param y 起始位置的y坐标
+   * @param hour 小时
+   * @param Minute 分钟
+   * @param seconds 秒
+   * @param fontSize 字体大小
+   * @param color 字体颜色
+   */
+  void updateLcdTime(uint8_t id, uint8_t x, uint8_t y, uint8_t hour, uint8_t Minute, uint8_t seconds, uint8_t fontSize, uint16_t color);
 
   /**
    * @fn drawLcdDate
@@ -399,21 +659,9 @@
    * @param weeks 星期数
    * @param fontSize 字体大小
    * @param color 字体颜色
-   * @param bgColor 字体背景颜色
    */
-  void drawLcdDate(uint8_t x,uint8_t y,uint8_t month,uint8_t day,uint8_t weeks,uint8_t fontSize,uint16_t color,uint16_t bgColor);
+  void drawLcdDate(uint8_t x, uint8_t y, uint8_t month, uint8_t day, uint8_t weeks, uint8_t fontSize, uint16_t color);
 
-  /**
-   * @fn reset
-   * @brief 复位显示屏,显示屏复位后,创建的lvlg控件全部删除,显示的内容也一并清楚
-   */
-  void reset();
-  /**
-   * @fn lvglDelete
-   * @brief 指定某个已创建的控件进行删除
-   * @param obj 要删除对象的控件
-   */
-  void lvglDelete(sControlinf_t* obj);
 ```
 
 ## 兼容性
