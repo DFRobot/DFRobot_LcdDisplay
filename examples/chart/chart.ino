@@ -50,6 +50,7 @@ uint16_t point2[5] = { 90,30,80,10,100 };
  * PURPLE OLIVE LIGHTGREY DARKGREY ORANGE
  * GREENYELLOW 
  */
+
 void testChart(){
     // Create a chart and set the background color to white and the mode to Line chart mode
     chartId1 = lcd.creatChart(/*X-axis tick labels*/"Jan\nFeb\nMar\nApr\nMay", /*Y-axis tick labels*/"100\n80\n60\n40\n20\n0",/*background Color*/ 0xFFFFFF,/*Chart style:1-3*/1);

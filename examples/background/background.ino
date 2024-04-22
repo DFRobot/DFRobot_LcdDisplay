@@ -40,6 +40,7 @@
  * PURPLE OLIVE LIGHTGREY DARKGREY ORANGE
  * GREENYELLOW
  */
+
 // Switch background color
 void testBackgroundColor(){
     lcd.setBackgroundColor(RED);

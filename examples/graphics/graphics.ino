@@ -16,7 +16,7 @@
 #define I2C_COMMUNICATION  // I2C communication. If you want to use UART communication, comment out this line of code.
 
 #ifdef  I2C_COMMUNICATION
-/**
+/** 
     * Using the I2C interface.
     */
 DFRobot_Lcd_IIC lcd(&Wire, /*I2CAddr*/ 0x2c);

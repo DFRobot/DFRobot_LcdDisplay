@@ -17,7 +17,7 @@
 
 #ifdef  I2C_COMMUNICATION
   /**
-    * Using the I2C interface.
+    * Using the I2C interface. 
     */
   DFRobot_Lcd_IIC lcd(&Wire, /*I2CAddr*/ 0x2c);
 #else

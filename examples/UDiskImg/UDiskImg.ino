@@ -21,7 +21,7 @@
 /**
     * Using the I2C interface.
     */
-DFRobot_Lcd_IIC lcd(&Wire, /*I2CAddr*/ 0x2c);
+DFRobot_Lcd_IIC lcd(&Wire, /*I2CAddr*/ 0x2c); 
 #else
 /**
     * Using the UART interface.

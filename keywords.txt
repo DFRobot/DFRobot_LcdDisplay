@@ -390,6 +390,10 @@ eIconSunflower	LITERAL1
 eIconSunflower1	LITERAL1
 eIconTulips	LITERAL1
 
+eGifRain LITERAL1
+eGifWind LITERAL1
+eGifSun LITERAL1
+
 eChinese	LITERAL1
 eShiftJis	LITERAL1
 eAscii	LITERAL1
