@@ -1,4 +1,3 @@
-
 /**!
  * @file  UDiskImg.ino
  * @brief  Displays a picture of a USB flash drive
@@ -40,27 +39,31 @@ uint8_t iconId[5]; // An array for storing icon ids
 void testIcon(){
     // Create a few ICONS at (0,0), which are file names, so the file will be read from an external USB flash drive
     // If there is no corresponding path on the USB flash drive, a white screen will be displayed
-    iconId[0] = lcd.drawIcon(0, 0, "cat.png", 256);
+    iconId[0] = lcd.drawIcon(0, 0, "UDisk_Cat.png", 256);
     delay(200);
-    iconId[1] = lcd.drawIcon(0, 0, "fish.png", 256);
+    iconId[1] = lcd.drawIcon(0, 0, "UDisk_Fish.png", 256);
     delay(200);
-    iconId[2] = lcd.drawIcon(0, 0, "shy.png", 256);
+    iconId[2] = lcd.drawIcon(0, 0, "UDisk_Shy.png", 256);
     delay(200);
-    iconId[3] = lcd.drawIcon(0, 0, "smile.png", 256);
+    iconId[3] = lcd.drawIcon(0, 0, "UDisk_Smile.png", 256);
     delay(200);
-    iconId[4] = lcd.drawIcon(0, 0, "angry.png", 256);
+    iconId[4] = lcd.drawIcon(0, 0, "UDisk_Angry.png", 256);
     delay(200);
     // Move the ICONS one by one
-    for(uint8_t i = 0; i < 5; i++){
-        lcd.updateIcon(iconId[4], i*64, 0, "angry.png", 256);
+    for(uint8_t i = 0; i < 12; i++){
+        lcd.updateIcon(iconId[4], i*32, 0, "UDisk_Angry.png", 256);
     }
     delay(200);
-    for(uint8_t i = 0 ; i < 4; i++){
-        lcd.updateIcon(iconId[3], i*64, 0, "smile.png", 256);
+    for(uint8_t i = 0 ; i < 12; i++){
+        lcd.updateIcon(iconId[3], i*32, 0, "UDisk_Smile.png", 256);
     }
     delay(200);
-    for(uint8_t i = 0; i < 3; i++){
-        lcd.updateIcon(iconId[2], i*64, 0, "shy.png", 256);
+    for(uint8_t i = 0; i < 12; i++){
+        lcd.updateIcon(iconId[2], i*32, 0, "UDisk_Shy.png", 256);
+    }
+    delay(200);
+    for(uint8_t i = 0; i < 12; i++){
+        lcd.updateIcon(iconId[1], i*32, 0, "UDisk_Fish.png", 256);
     }
     delay(200);
     // Delete these ICONS
